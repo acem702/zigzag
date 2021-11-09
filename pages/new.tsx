@@ -1,28 +1,42 @@
+import { Post } from ".prisma/client";
 import { Box, Form, FormField, TextInput, Button } from "grommet";
 import type { NextPage } from "next";
+import Router from "next/router";
 import { useState } from "react";
 
 const NewPost: NextPage = () => {
-  const [value, setValue] = useState({ text: ''});
+  const [value, setValue] = useState({ content: "" });
 
-  const handleSubmit = ({ value }: { value: { text: string } }) => {
-    console.log(value.text);
-    setValue({ text: ''})
+  const handleSubmit = async ({ value: { content } }) => {
+    try {
+      const body = {
+        content,
+        authorId: 'ckvsm54ln0023u3hb3idfydku'
+      };
+      await fetch('/api/post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+      })
+      await Router.push('/feed');
+    } catch (error) {
+      console.error(error);
+    }
+    setValue({ content: "" });
   };
 
   return (
-    <Box direction="column">
+    <Box direction="column" pad="medium">
       <Form
         value={value}
         onChange={(nextValue) => setValue(nextValue)}
         onSubmit={handleSubmit}
       >
-        <FormField name="text" label="New post">
-          <TextInput placeholder="your post here" name="text" maxLength={200} />
+        <FormField name="content">
+          <TextInput placeholder="your post here" name="content" maxLength={200} />
         </FormField>
         <Button type="submit" primary label="Submit" />
       </Form>
-      <pre>{JSON.stringify(value, null, 2)}</pre>
     </Box>
   );
 };
