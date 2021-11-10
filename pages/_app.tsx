@@ -1,7 +1,8 @@
 import type { AppProps } from "next/app";
 import { Grommet } from "grommet";
 import Layout from "../components/layout";
-import '../styles/globals.css';
+import { SessionProvider } from "next-auth/react";
+import "../styles/globals.css";
 
 const theme = {
   global: {
@@ -11,18 +12,20 @@ const theme = {
       height: "20px",
     },
     body: {
-      margin: '0',
-    }
+      margin: "0",
+    },
   },
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <Grommet theme={theme}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </Grommet>
+    <SessionProvider session={session}>
+      <Grommet theme={theme}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Grommet>
+    </SessionProvider>
   );
 }
 

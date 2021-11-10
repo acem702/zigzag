@@ -3247,6 +3247,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+use-position@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/use-position/-/use-position-1.0.0.tgz#6fc043cd29a699b455eabe845db18827fb5d495c"
+  integrity sha512-YEN3YwP3rBmtlJeU49C4qPTPPV+FZJ8O+L3VpIFwnaDcYzf1RVp2HWYWsuLytYHm5ga2a3lZjyk4ou5vonxNrQ==
+
 use-subscription@1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/use-subscription/-/use-subscription-1.5.1.tgz#73501107f02fad84c6dd57965beb0b75c68c42d1"
