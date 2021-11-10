@@ -2,23 +2,30 @@ import { Post } from ".prisma/client";
 import { Box, Form, FormField, TextInput, Button } from "grommet";
 import type { NextPage } from "next";
 import Router from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePosition } from "use-position";
 
 const NewPost: NextPage = () => {
   const [value, setValue] = useState({ content: "" });
+  const { latitude, longitude } = usePosition();
 
-  const handleSubmit = async ({ value: { content } }) => {
+  const handleSubmit = async ({
+    value: { content },
+  }: {
+    value: { content: string };
+  }) => {
     try {
       const body = {
         content,
-        authorId: 'ckvsm54ln0023u3hb3idfydku'
+        latitude,
+        longitude,
       };
-      await fetch('/api/post', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
+      await fetch("/api/post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
-      })
-      await Router.push('/feed');
+      });
+      await Router.push("/");
     } catch (error) {
       console.error(error);
     }
@@ -33,7 +40,11 @@ const NewPost: NextPage = () => {
         onSubmit={handleSubmit}
       >
         <FormField name="content">
-          <TextInput placeholder="your post here" name="content" maxLength={200} />
+          <TextInput
+            placeholder="your post here"
+            name="content"
+            maxLength={200}
+          />
         </FormField>
         <Button type="submit" primary label="Submit" />
       </Form>

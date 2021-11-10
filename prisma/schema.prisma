@@ -52,7 +52,7 @@ model User {
   createdAt    DateTime  @default(now())
   name         String?
   email        String    @unique
-  emailVerified DateTime?
+  emailVerifed DateTime?
   image        String?
   posts        Post[]
   accounts     Account[]
@@ -65,4 +65,6 @@ model Post {
   content   String   @db.VarChar(200)
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+  latitude  Float?
+  longitude Float?
 }

@@ -1,15 +1,39 @@
-import type { NextPage } from "next";
+import { Post } from ".prisma/client";
+import { Box } from "grommet";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import PostItem from "../components/post-item";
+import prisma from "../lib/prisma";
+import { usePosition } from "use-position";
+import { getPrettyDistance } from "../lib/distance";
 
-const Home: NextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  const feed = await prisma.post.findMany({});
+  return { props: { feed } };
+};
+
+const Feed: NextPage = ({ feed }) => {
+  const { latitude, longitude } = usePosition();
+
   return (
-    <div>
+    <Box>
       <Head>
-        <title>Home</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <title>Feed</title>
       </Head>
-    </div>
+      {feed.map((post: Post) => (
+        <PostItem
+          key={post.id}
+          {...post}
+          distance={getPrettyDistance(
+            post.latitude,
+            post.longitude,
+            latitude,
+            longitude
+          )}
+        />
+      ))}
+    </Box>
   );
 };
 
-export default Home;
+export default Feed;
