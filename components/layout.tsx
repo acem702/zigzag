@@ -33,6 +33,7 @@ export default function Layout({ children }: Props) {
             <Text
               onClick={() => signIn("google")}
               color="accent-1"
+              style={{ cursor: "pointer" }}
             >
               Sign in
             </Text>
