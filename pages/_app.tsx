@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Grommet theme={theme}>
+      <Grommet theme={theme} full>
         <Layout>
           <Component {...pageProps} />
         </Layout>

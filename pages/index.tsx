@@ -8,23 +8,35 @@ import { usePosition } from "use-position";
 import { getPrettyDistance } from "../lib/distance";
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const feed = await prisma.post.findMany({});
+  const feed = await prisma.post.findMany({
+    include: {
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+  });
   return { props: { feed } };
 };
 
+interface PostWithCount extends Post {
+  _count: { comments: number };
+}
+
 interface Props {
-  feed: Post[];
+  feed: PostWithCount[];
 }
 
 const Feed: NextPage<Props> = ({ feed }: Props) => {
   const { latitude, longitude } = usePosition(false);
-
+  console.log(feed);
   return (
     <Box>
       <Head>
         <title>Feed</title>
       </Head>
-      {feed.map((post: Post) => (
+      {feed.map((post) => (
         <PostItem
           key={post.id}
           {...post}
@@ -34,6 +46,7 @@ const Feed: NextPage<Props> = ({ feed }: Props) => {
             latitude,
             longitude
           )}
+          count={post._count.comments}
         />
       ))}
     </Box>
