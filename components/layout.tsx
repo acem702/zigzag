@@ -1,13 +1,16 @@
 import { Nav, Anchor, Header, Text } from "grommet";
-import { Announce } from "grommet-icons";
+import { Announce, User } from "grommet-icons";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function Layout({ children }: Props) {
+  const { data: session, status } = useSession();
+
   return (
     <>
       <Header background="brand" pad="medium">
@@ -17,9 +20,23 @@ export default function Layout({ children }: Props) {
           </Text>
         </Link>
         <Nav direction="row">
-          <Link href="/new" passHref>
-            <Anchor icon={<Announce />} />
-          </Link>
+          {status === "authenticated" ? (
+            <>
+              <Link href="/new" passHref>
+                <Anchor icon={<Announce />} />
+              </Link>
+              <Link href="/profile" passHref>
+                <Anchor icon={<User />} />
+              </Link>
+            </>
+          ) : (
+            <Text
+              onClick={() => signIn("google")}
+              color="accent-1"
+            >
+              Sign in
+            </Text>
+          )}
         </Nav>
       </Header>
       <main>{children}</main>
