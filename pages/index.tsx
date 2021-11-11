@@ -1,13 +1,13 @@
 import { Post } from ".prisma/client";
 import { Box } from "grommet";
-import type { GetStaticProps, NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import PostItem from "../components/post-item";
 import { prisma } from "../lib/prisma";
 import { usePosition } from "use-position";
 import { getPrettyDistance } from "../lib/distance";
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const feed = await prisma.post.findMany({});
   return { props: { feed } };
 };

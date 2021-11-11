@@ -55,16 +55,30 @@ model User {
   emailVerifed DateTime?
   image        String?
   posts        Post[]
+  comments     Comment[]
   accounts     Account[]
   sessions     Session[]
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  content   String   @db.VarChar(200)
-  author    User     @relation(fields: [authorId], references: [id])
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  content   String    @db.VarChar(200)
+  author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   latitude  Float?
   longitude Float?
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String   @db.VarChar(200)
+  latitude  Float?
+  longitude Float?
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
 }
