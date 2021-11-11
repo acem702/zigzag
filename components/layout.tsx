@@ -15,7 +15,7 @@ export default function Layout({ children }: Props) {
     <>
       <Header background="brand" pad="medium">
         <Link href="/">
-          <Text color="accent-1" weight="bold" style={{ cursor: "pointer" }}>
+          <Text color="accent-1" size="large" weight="bold" style={{ cursor: "pointer" }}>
             <a>Zig Zag</a>
           </Text>
         </Link>
