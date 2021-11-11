@@ -1,13 +1,14 @@
 import { Post } from ".prisma/client";
 import { Box, Form, FormField, TextInput, Button } from "grommet";
 import type { NextPage } from "next";
+import Head from "next/head";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import { usePosition } from "use-position";
 
 const NewPost: NextPage = () => {
   const [value, setValue] = useState({ content: "" });
-  const { latitude, longitude } = usePosition();
+  const { latitude, longitude } = usePosition(false);
 
   const handleSubmit = async ({
     value: { content },
@@ -34,6 +35,9 @@ const NewPost: NextPage = () => {
 
   return (
     <Box direction="column" pad="medium">
+      <Head>
+        <title>New Post</title>
+      </Head>
       <Form
         value={value}
         onChange={(nextValue) => setValue(nextValue)}

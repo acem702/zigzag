@@ -3,7 +3,7 @@ import { Box } from "grommet";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import PostItem from "../components/post-item";
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { usePosition } from "use-position";
 import { getPrettyDistance } from "../lib/distance";
 
@@ -12,8 +12,12 @@ export const getStaticProps: GetStaticProps = async () => {
   return { props: { feed } };
 };
 
-const Feed: NextPage = ({ feed }) => {
-  const { latitude, longitude } = usePosition();
+interface Props {
+  feed: Post[];
+}
+
+const Feed: NextPage<Props> = ({ feed }: Props) => {
+  const { latitude, longitude } = usePosition(false);
 
   return (
     <Box>

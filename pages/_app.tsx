@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { Grommet } from "grommet";
 import Layout from "../components/layout";
 import { SessionProvider } from "next-auth/react";
@@ -20,6 +21,9 @@ const theme = {
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Grommet theme={theme}>
         <Layout>
           <Component {...pageProps} />

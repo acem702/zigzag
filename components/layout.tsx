@@ -1,17 +1,23 @@
 import { Nav, Anchor, Header, Text } from "grommet";
 import { Announce } from "grommet-icons";
 import Link from "next/link";
+import { ReactNode } from "react";
 
-export default function Layout({ children }) {
+interface Props {
+  children: ReactNode;
+}
+
+export default function Layout({ children }: Props) {
   return (
     <>
       <Header background="brand" pad="medium">
-        {/* TODO: unstyle link */}
         <Link href="/">
-          <a>Zig Zag</a>
+          <Text color="accent-1" weight="bold" style={{ cursor: "pointer" }}>
+            <a>Zig Zag</a>
+          </Text>
         </Link>
         <Nav direction="row">
-          <Link href="/new">
+          <Link href="/new" passHref>
             <Anchor icon={<Announce />} />
           </Link>
         </Nav>

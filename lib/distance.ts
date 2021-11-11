@@ -11,13 +11,18 @@ function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
 }
 
 export function getPrettyDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
+  lat1: number | null | undefined,
+  lon1: number | null | undefined,
+  lat2: number | null | undefined,
+  lon2: number | null | undefined
 ) {
-  const distanceInKm = distance(lat1, lon1, lat2, lon2);
-  const distanceInMi = distanceInKm / 1.609;
+  if (lat1 && lon1 && lat2 && lon2) {
+    const distanceInKm = distance(lat1, lon1, lat2, lon2);
+    const distanceInMi = distanceInKm / 1.609;
 
-  return distanceInMi < 1 ? 'Nearby' : `~${Math.round(distanceInMi)} mi`;
+    return distanceInMi < 1 ? 'Nearby' : `~${Math.round(distanceInMi)} mi`;
+  } else {
+    return '';
+  }
+
 }
