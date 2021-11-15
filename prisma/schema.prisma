@@ -48,37 +48,63 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  createdAt     DateTime  @default(now())
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(now())
   name          String?
-  email         String    @unique
+  email         String        @unique
   emailVerified DateTime?
   image         String?
   posts         Post[]
   comments      Comment[]
   accounts      Account[]
   sessions      Session[]
+  postVotes     PostVote[]
+  commentVotes  CommentVote[]
 }
 
 model Post {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  content   String    @db.VarChar(200)
-  author    User      @relation(fields: [authorId], references: [id])
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  content   String     @db.VarChar(200)
+  author    User       @relation(fields: [authorId], references: [id])
   authorId  String
   latitude  Float?
   longitude Float?
   comments  Comment[]
+  votes     PostVote[]
 }
 
 model Comment {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  content   String   @db.VarChar(200)
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now())
+  content   String        @db.VarChar(200)
   latitude  Float?
   longitude Float?
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User          @relation(fields: [authorId], references: [id])
   authorId  String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post          @relation(fields: [postId], references: [id])
   postId    String
+  votes     CommentVote[]
+}
+
+model PostVote {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+  rating Int    @db.SmallInt
+
+  @@unique([postId, userId], map: "PostVote_postId_userId_unique_constraint")
+}
+
+model CommentVote {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId String
+  rating    Int     @db.SmallInt
+
+  @@unique([commentId, userId], map: "CommentVote_commentId_userId_unique_constraint")
 }

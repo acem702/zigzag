@@ -6,31 +6,44 @@ import PostItem from "../components/post-item";
 import { prisma } from "../lib/prisma";
 import { usePosition } from "use-position";
 import { getPrettyDistance } from "../lib/distance";
+import { PostWithVotes } from "../components/post-vote-counter";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { sort } = query;
+  const sortOrder =
+    sort === "new"
+      ? {
+          createdAt: "desc",
+        }
+      : {
+          test: "t",
+        };
   const feed = await prisma.post.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       _count: {
         select: {
           comments: true,
         },
       },
+      votes: true,
     },
   });
   return { props: { feed } };
 };
 
-interface PostWithCount extends Post {
+interface PostWithCountAndVotes extends PostWithVotes {
   _count: { comments: number };
 }
 
 interface Props {
-  feed: PostWithCount[];
+  feed: PostWithCountAndVotes[];
 }
 
 const Feed: NextPage<Props> = ({ feed }: Props) => {
   const { latitude, longitude } = usePosition(false);
-  console.log(feed);
   return (
     <Box>
       <Head>
@@ -39,7 +52,7 @@ const Feed: NextPage<Props> = ({ feed }: Props) => {
       {feed.map((post) => (
         <PostItem
           key={post.id}
-          {...post}
+          post={post}
           distance={getPrettyDistance(
             post.latitude,
             post.longitude,

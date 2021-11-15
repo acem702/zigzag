@@ -1,13 +1,14 @@
-import { Post, Comment } from ".prisma/client";
-import { Box, Text, Form, FormField, TextInput, Button } from "grommet";
-import type { GetServerSideProps, NextPage } from "next";
+import { useState } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
+import type { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../../lib/prisma";
+import { Post, Comment, PostVote } from ".prisma/client";
+import { Box, Text, Form, FormField, TextInput, Button } from "grommet";
 import { usePosition } from "use-position";
 import { getPrettyDistance } from "../../lib/distance";
 import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import PostVoteCounter from "../../components/post-vote-counter";
 import CommentList from "../../components/comment-list";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -17,24 +18,31 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     },
     include: {
       comments: true,
+      votes: {
+        select: {
+          userId: true,
+          rating: true,
+        },
+      },
     },
   });
   return { props: { post } };
 };
 
-interface PostWithComments extends Post {
+export interface PostWithCommentsAndVotes extends Post {
   comments: Comment[];
+  votes: PostVote[];
 }
 
 interface Props {
-  post: PostWithComments;
+  post: PostWithCommentsAndVotes;
 }
 
 const PostDetail: NextPage<Props> = ({ post }: Props) => {
   const { latitude, longitude } = usePosition(false);
   const [value, setValue] = useState({ comment: "" });
-  const router = useRouter();
 
+  const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
   };
@@ -61,7 +69,7 @@ const PostDetail: NextPage<Props> = ({ post }: Props) => {
           latitude,
           longitude,
         };
-        await fetch("/api/comment", {
+        await fetch("/api/comments", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
@@ -79,11 +87,14 @@ const PostDetail: NextPage<Props> = ({ post }: Props) => {
       <Head>
         <title>Post</title>
       </Head>
-      <Box pad="medium">
-        <Text size="3xl">{post.content}</Text>
-        <Text size="small" color="dark-5">
-          {formatDistanceToNow(post.createdAt)} ago &middot; {distance}
-        </Text>
+      <Box direction="row" align="center" pad="medium">
+        <Box flex="grow">
+          <Text size="3xl">{post.content}</Text>
+          <Text size="small" color="dark-5">
+            {formatDistanceToNow(post.createdAt)} ago &middot; {distance}
+          </Text>
+        </Box>
+        <PostVoteCounter initialPost={post} />
       </Box>
       <Box background="light-3" pad="small">
         <Text color="dark-6" weight="bold">

@@ -12,7 +12,7 @@ export default async function handler(
   const result = await prisma.post.create({
     data: {
       content,
-      author: { connect: { email: session?.user?.email || undefined } },
+      author: { connect: { id: session?.user?.id } },
       latitude,
       longitude,
     },

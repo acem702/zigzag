@@ -21,7 +21,7 @@ const NewPost: NextPage = () => {
         latitude,
         longitude,
       };
-      await fetch("/api/post", {
+      await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -50,7 +50,7 @@ const NewPost: NextPage = () => {
             maxLength={200}
           />
         </FormField>
-        <Button type="submit" primary label="Submit" />
+        <Button type="submit" primary label="Post" />
       </Form>
     </Box>
   );
