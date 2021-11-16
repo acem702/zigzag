@@ -1,17 +1,17 @@
 import { prisma } from "./prisma";
 import { getSession } from "next-auth/react";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PostVote } from ".prisma/client";
+import { CommentVote } from ".prisma/client";
 
 export default function generateVote(rating: number) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
     const session = await getSession({ req });
     try {
       if (session?.user) {
-        let updatedVotes: PostVote[] = [];
-        const votesByUser = await prisma.post.findUnique({
+        let updatedVotes: CommentVote[] = [];
+        const votesByUser = await prisma.comment.findUnique({
           where: {
-            id: req.query.id as string,
+            id: req.query.commentId as string,
           },
           select: {
             votes: {
@@ -26,35 +26,35 @@ export default function generateVote(rating: number) {
 
         // User hasn't voted
         if (!existingVote) {
-          const response = await prisma.postVote.create({
+          const response = await prisma.commentVote.create({
             data: {
               user: { connect: { id: session?.user?.id } },
-              post: { connect: { id: req.query.id as string } },
+              comment: { connect: { id: req.query.commentId as string } },
               rating,
             },
             select: {
-              post: {
+              comment: {
                 select: {
                   votes: true,
                 },
               },
             },
           });
-          updatedVotes = response.post.votes;
+          updatedVotes = response.comment.votes;
 
           // User already voted the same way
         } else if (existingVote.rating === rating) {
-          await prisma.postVote.delete({
+          await prisma.commentVote.delete({
             where: {
-              postId_userId: {
-                postId: req.query.id as string,
+              commentId_userId: {
+                commentId: req.query.commentId as string,
                 userId: session?.user?.id,
               },
             },
           });
-          const response = await prisma.post.findUnique({
+          const response = await prisma.comment.findUnique({
             where: {
-              id: req.query.id as string,
+              id: req.query.commentId as string,
             },
             select: {
               votes: true,
@@ -63,10 +63,10 @@ export default function generateVote(rating: number) {
           updatedVotes = response?.votes || [];
           // User already voted the other way
         } else {
-          const response = await prisma.postVote.update({
+          const response = await prisma.commentVote.update({
             where: {
-              postId_userId: {
-                postId: req.query.id as string,
+              commentId_userId: {
+                commentId: req.query.commentId as string,
                 userId: session?.user?.id,
               },
             },
@@ -74,14 +74,14 @@ export default function generateVote(rating: number) {
               rating,
             },
             select: {
-              post: {
+              comment: {
                 select: {
                   votes: true,
                 },
               },
             },
           });
-          updatedVotes = response.post.votes;
+          updatedVotes = response.comment.votes;
         }
         res.json({ votes: updatedVotes });
       } else {

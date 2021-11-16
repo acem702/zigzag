@@ -2,8 +2,9 @@ import { Comment } from ".prisma/client";
 import { Box, Text, Avatar } from "grommet";
 import { formatDistanceToNow } from "date-fns";
 import EmojiAvatar from './emoji-avatar';
+import CommentVoteCounter, { CommentWithVotes } from "./comment-vote-counter";
 
-interface Props extends Comment {
+interface Props extends CommentWithVotes {
   distance: string;
   postAuthorId: string;
 }
@@ -15,12 +16,13 @@ const CommentItem = ({ distance, postAuthorId, ...comment }: Props) => {
       ) : (
         <EmojiAvatar postId={comment.postId} authorId={comment.authorId} />
       )}
-      <Box>
+      <Box flex="grow">
         <Text size="large">{comment.content}</Text>
         <Text size="xsmall" color="dark-5">
           {formatDistanceToNow(comment.createdAt)} ago &middot; {distance}
         </Text>
       </Box>
+      <CommentVoteCounter initialComment={comment} />
     </Box>
   );
 };

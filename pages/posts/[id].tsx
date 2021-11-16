@@ -10,6 +10,7 @@ import { getPrettyDistance } from "../../lib/distance";
 import { formatDistanceToNow } from "date-fns";
 import PostVoteCounter from "../../components/post-vote-counter";
 import CommentList from "../../components/comment-list";
+import { CommentWithVotes } from "../../components/comment-vote-counter";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
@@ -17,7 +18,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       id: params?.id as string | undefined,
     },
     include: {
-      comments: true,
+      comments: {
+        include: {
+          votes: true,
+        }
+      },
       votes: {
         select: {
           userId: true,
@@ -30,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 };
 
 export interface PostWithCommentsAndVotes extends Post {
-  comments: Comment[];
+  comments: CommentWithVotes[];
   votes: PostVote[];
 }
 
@@ -65,11 +70,10 @@ const PostDetail: NextPage<Props> = ({ post }: Props) => {
       if (comment) {
         const body = {
           content: comment,
-          postId: post.id,
           latitude,
           longitude,
         };
-        await fetch("/api/comments", {
+        await fetch(`/api/posts/${post.id}/comments`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
