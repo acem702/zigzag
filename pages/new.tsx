@@ -50,7 +50,7 @@ const NewPost: NextPage = () => {
             maxLength={200}
           />
         </FormField>
-        <Button type="submit" primary label="Post" />
+        <Button type="submit" primary label="post" />
       </Form>
     </Box>
   );

@@ -28,7 +28,6 @@ const PostItem = ({ distance, count, post }: Props) => {
           </Text>
         </Link>
       </Box>
-      {/* {JSON.stringify(post.votes, null, 2)} */}
       <PostVoteCounter initialPost={post} />
     </Box>
   );

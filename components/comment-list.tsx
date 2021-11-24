@@ -6,13 +6,14 @@ import { getPrettyDistance } from "../lib/distance";
 import { CommentWithVotes } from "./comment-vote-counter";
 
 interface Props {
-  comments: CommentWithVotes[];
+  comments: (CommentWithVotes & {postContent?: string})[];
   userLatitude: number | undefined;
   userLongitude: number | undefined;
   postAuthorId: string;
+  showPostContent?: boolean;
 }
-const CommentList = ({ comments, userLatitude, userLongitude, postAuthorId }: Props) => {
-  const commentItems = comments.map((comment: CommentWithVotes) => (
+const CommentList = ({ comments, userLatitude, userLongitude, postAuthorId, showPostContent = false }: Props) => {
+  const commentItems = comments.map((comment) => (
     <CommentItem
       key={comment.id}
       distance={getPrettyDistance(
@@ -22,6 +23,7 @@ const CommentList = ({ comments, userLatitude, userLongitude, postAuthorId }: Pr
         userLongitude
       )}
       postAuthorId={postAuthorId}
+      showPostContent
       {...comment}
     />
   ));

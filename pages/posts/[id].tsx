@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import type { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../../lib/prisma";
-import { Post, Comment, PostVote } from ".prisma/client";
+import { Post, PostVote } from ".prisma/client";
 import { Box, Text, Form, FormField, TextInput, Button } from "grommet";
 import { usePosition } from "use-position";
 import { getPrettyDistance } from "../../lib/distance";

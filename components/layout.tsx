@@ -30,7 +30,7 @@ export default function Layout({ children }: Props) {
             weight="bold"
             style={{ cursor: "pointer" }}
           >
-            <a>Zig Zag</a>
+            <a>zig zag</a>
           </Text>
         </Link>
         <Nav direction="row">
@@ -52,7 +52,7 @@ export default function Layout({ children }: Props) {
               color="accent-1"
               style={{ cursor: "pointer" }}
             >
-              Sign in
+              sign in
             </Text>
           )}
         </Nav>
