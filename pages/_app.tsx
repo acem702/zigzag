@@ -8,7 +8,7 @@ import "../styles/globals.css";
 const theme = {
   global: {
     font: {
-      family: "Roboto",
+      family: "Inter, sans-serif",
       size: "18px",
       height: "20px",
     },

@@ -95,7 +95,7 @@ const PostVoteCounter = ({ initialPost }: Props) => {
   const handleDownvote = handleVote(false);
 
   return (
-    <Box align="center" pad="small">
+    <Box align="center" justify="center" pad="small">
       <Button icon={<Up color={userUpvoted ? 'brand' : 'plain'}/>} onClick={handleUpvote} plain />
       <Text>{totalRating}</Text>
       <Button

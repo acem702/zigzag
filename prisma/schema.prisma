@@ -66,7 +66,7 @@ model Post {
   id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
   content   String     @db.VarChar(200)
-  author    User       @relation(fields: [authorId], references: [id])
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   latitude  Float?
   longitude Float?
@@ -80,18 +80,18 @@ model Comment {
   content   String        @db.VarChar(200)
   latitude  Float?
   longitude Float?
-  author    User          @relation(fields: [authorId], references: [id])
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  post      Post          @relation(fields: [postId], references: [id])
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
   votes     CommentVote[]
 }
 
 model PostVote {
   id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  post   Post   @relation(fields: [postId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
   rating Int    @db.SmallInt
 
@@ -100,9 +100,9 @@ model PostVote {
 
 model CommentVote {
   id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  comment   Comment @relation(fields: [commentId], references: [id])
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String
   rating    Int     @db.SmallInt
 

@@ -11,6 +11,7 @@ import { formatDistanceToNow } from "date-fns";
 import PostVoteCounter from "../../components/post-vote-counter";
 import CommentList from "../../components/comment-list";
 import { CommentWithVotes } from "../../components/comment-vote-counter";
+import DeletePostButton from "../../components/delete-post-button";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       comments: {
         include: {
           votes: true,
-        }
+        },
       },
       votes: {
         select: {
@@ -93,7 +94,10 @@ const PostDetail: NextPage<Props> = ({ post }: Props) => {
       </Head>
       <Box direction="row" align="center" pad="medium">
         <Box flex="grow">
-          <Text size="3xl">{post.content}</Text>
+          <Text size="3xl">
+            {post.content}
+            <DeletePostButton postAuthorId={post.authorId} postId={post.id} redirect="/" />
+          </Text>
           <Text size="small" color="dark-5">
             {formatDistanceToNow(post.createdAt)} ago &middot; {distance}
           </Text>
@@ -117,13 +121,13 @@ const PostDetail: NextPage<Props> = ({ post }: Props) => {
           onChange={(nextValue) => setValue(nextValue)}
           onSubmit={handleSubmit}
         >
-          <Box direction="row" gap="medium">
+          <Box direction="row" gap="medium" align="center">
             <Box flex="grow">
               <FormField name="comment">
                 <TextInput name="comment" placeholder="Add a new comment" />
               </FormField>
             </Box>
-            <Button type="submit" label="Send" />
+            <Button type="submit" primary label="send" />
           </Box>
         </Form>
       </Box>
