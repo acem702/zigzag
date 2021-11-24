@@ -1,21 +1,36 @@
-import { Nav, Anchor, Header, Text } from "grommet";
+import { Nav, Anchor, Header, Text, Box } from "grommet";
 import { Announce, User } from "grommet-icons";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 
 interface Props {
   children: ReactNode;
+  voteScore: number | null;
 }
 
 export default function Layout({ children }: Props) {
   const { data: session, status } = useSession();
+  const [voteScore, setVoteScore] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/users/me/score")
+      .then((res) => res.json())
+      .then((res) => {
+        setVoteScore(res);
+      });
+  }, []);
 
   return (
     <>
       <Header background="brand" pad="medium">
         <Link href="/">
-          <Text color="accent-1" size="large" weight="bold" style={{ cursor: "pointer" }}>
+          <Text
+            color="accent-1"
+            size="large"
+            weight="bold"
+            style={{ cursor: "pointer" }}
+          >
             <a>Zig Zag</a>
           </Text>
         </Link>
@@ -26,7 +41,10 @@ export default function Layout({ children }: Props) {
                 <Anchor icon={<Announce />} />
               </Link>
               <Link href="/profile" passHref>
-                <Anchor icon={<User />} />
+                <Box direction="row" align="center">
+                  <Anchor icon={<User />} />
+                  {voteScore || 0} zig
+                </Box>
               </Link>
             </>
           ) : (

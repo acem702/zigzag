@@ -1,4 +1,3 @@
-import { Post } from ".prisma/client";
 import { Box } from "grommet";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";

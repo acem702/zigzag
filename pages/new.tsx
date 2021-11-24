@@ -3,7 +3,7 @@ import { Box, Form, FormField, TextInput, Button } from "grommet";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Router from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePosition } from "use-position";
 
 const NewPost: NextPage = () => {
