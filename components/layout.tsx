@@ -6,7 +6,6 @@ import { signIn, useSession } from "next-auth/react";
 
 interface Props {
   children: ReactNode;
-  voteScore: number | null;
 }
 
 export default function Layout({ children }: Props) {
